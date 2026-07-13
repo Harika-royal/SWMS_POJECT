@@ -1,0 +1,10 @@
+const express = require('express');
+const router = express.Router();
+const customerController = require('../controllers/customerController');
+const auth = require('../middleware/auth');
+
+router.get('/', auth, customerController.getCustomers);
+router.post('/', auth, customerController.createCustomer);
+router.put('/:id', auth, customerController.updateCustomer);
+
+module.exports = router;
