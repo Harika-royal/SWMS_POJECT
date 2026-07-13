@@ -49,9 +49,13 @@ exports.login = async (req, res) => {
       res.json({ token, user: { _id: user.id, name: user.name, email: user.email, role: user.role } });
     });
   } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server error');
-  }
+  console.error("REGISTER ERROR:", err);
+  res.status(500).json({
+    success: false,
+    message: err.message,
+    error: err,
+  });
+}
 };
 
 exports.getMe = async (req, res) => {
