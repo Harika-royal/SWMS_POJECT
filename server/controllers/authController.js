@@ -7,15 +7,21 @@ exports.register = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
-  const { name, email, password, role } = req.body;
+  const { name, email, password} = req.body;
 
   try {
     let user = await User.findOne({ email });
     if (user) return res.status(400).json({ message: 'User already exists' });
+const { name, email, password } = req.body;
 
-    user = new User({ name, email, password, role });
-    await user.save();
+user = new User({
+  name,
+  email,
+  password,
+  role: "employee",
+});
 
+await user.save();
     const payload = { user: { id: user.id } };
     jwt.sign(payload, process.env.JWT_SECRET || 'your_jwt_secret_key_here', { expiresIn: '7d' }, (err, token) => {
       if (err) throw err;

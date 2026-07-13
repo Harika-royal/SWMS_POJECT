@@ -7,7 +7,7 @@ export default function RegisterPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("employee");
+  
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,7 +22,7 @@ export default function RegisterPage() {
           name,
           email,
           password,
-          role,
+
         }),
       });
 
@@ -78,16 +78,7 @@ export default function RegisterPage() {
           required
         />
 
-        <select
-  className="w-full border rounded-lg p-3 mb-6"
-  value={role}
-  onChange={(e) => setRole(e.target.value)}
->
-  <option value="admin">Admin</option>
-  <option value="manager">Manager</option>
-  <option value="staff">Staff</option>
-  <option value="employee">Employee</option>
-</select>
+       
 
         <button
           type="submit"
