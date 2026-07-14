@@ -20,7 +20,7 @@ user = new User({
   password,
   role: "employee",
 });
-
+console.log("Saving user:", user);
 await user.save();
     const payload = { user: { id: user.id } };
     jwt.sign(payload, process.env.JWT_SECRET || 'your_jwt_secret_key_here', { expiresIn: '7d' }, (err, token) => {
@@ -28,9 +28,13 @@ await user.save();
       res.json({ token, user: { _id: user.id, name, email, role: user.role } });
     });
   } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server error');
-  }
+  console.error("REGISTER ERROR:", err);
+
+  return res.status(500).json({
+    success: false,
+    message: err.message,
+  });
+}
 };
 
 exports.login = async (req, res) => {
