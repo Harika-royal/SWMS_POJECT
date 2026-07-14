@@ -8,7 +8,7 @@ const connectDB = require('./config/db');
 
 const app = express();
 const profileRoutes = require("./routes/profileRoutes");
-const authRoutes = require("./routes/authRoutes");
+const authRoutes = require("./routes/auth");
 const warehouseRoutes = require("./routes/warehouseRoutes");
 // Connect to MongoDB
 connectDB();
