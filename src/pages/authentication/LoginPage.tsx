@@ -11,8 +11,8 @@ import { FadeIn } from '@/components/animations';
 export default function LoginPage() {
   const [, navigate] = useLocation();
   const { login } = useAuthStore();
-  const [email, setEmail] = useState('demo@swms.io');
-  const [password, setPassword] = useState('password');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
  const handleSubmit = async (e: React.FormEvent) => {
