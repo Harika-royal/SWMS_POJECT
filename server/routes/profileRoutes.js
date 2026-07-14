@@ -5,7 +5,7 @@ const auth = require("../middleware/auth");
 const {
   getProfile,
   updateProfile,
-} = require("../controllers/controllers/profileController");
+} = require("../controllers/profileController");
 
 router.get("/", auth, getProfile);
 router.put("/", auth, updateProfile);
