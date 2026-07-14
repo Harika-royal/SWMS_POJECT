@@ -9,7 +9,7 @@ const connectDB = require('./config/db');
 const app = express();
 const profileRoutes = require("./routes/profileRoutes");
 const authRoutes = require("./routes/auth");
-const warehouseRoutes = require("./routes/warehouse");
+const warehouseRoutes = require("./routes/warehouses");
 // Connect to MongoDB
 connectDB();
 
