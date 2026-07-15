@@ -50,25 +50,57 @@ exports.login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    let user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ message: 'Invalid Credentials' });
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid Credentials",
+      });
+    }
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ message: 'Invalid Credentials' });
 
-    return res.status(201).json({
-  success: true,
-  message: "User created successfully",
-  user,
-});
+    if (!isMatch) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid Credentials",
+      });
+    }
+
+    const payload = {
+      user: {
+        id: user.id,
+      },
+    };
+
+    jwt.sign(
+      payload,
+      process.env.JWT_SECRET || "your_jwt_secret_key_here",
+      { expiresIn: "7d" },
+      (err, token) => {
+        if (err) throw err;
+
+        res.json({
+          success: true,
+          token,
+          user: {
+            _id: user.id,
+            name: user.name,
+            email: user.email,
+            role: user.role,
+          },
+        });
+      }
+    );
   } catch (err) {
-  console.error("REGISTER ERROR:", err);
-  res.status(500).json({
-    success: false,
-    message: err.message,
-    error: err,
-  });
-}
+    console.error("LOGIN ERROR:", err);
+
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
 };
 
 exports.getMe = async (req, res) => {
