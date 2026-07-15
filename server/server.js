@@ -35,7 +35,7 @@ app.use('/api/customers',     require('./routes/customers'));
 app.use('/api/reports',       require('./routes/reports'));
 app.use('/api/inbound', require('./routes/inboundRoutes'));
 app.use("/api/profile", profileRoutes);
-app.use('/api/iot', require('./routes/iotRoutes'));
+//app.use('/api/iot', require('./routes/iotRoutes'));
 
 // ─── Health Check ─────────────────────────────────────────────────────────────
 app.get('/api/health', (_req, res) => res.json({ status: 'ok', timestamp: new Date() }));

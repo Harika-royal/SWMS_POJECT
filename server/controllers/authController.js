@@ -21,7 +21,16 @@ user = new User({
   role: "employee",
 });
 console.log("Saving user:", user);
-await user.save();
+try {
+  await user.save();
+} catch (e) {
+  console.error("SAVE ERROR:", e);
+  return res.status(500).json({
+    success: false,
+    message: e.message,
+    error: e,
+  });
+}
     const payload = { user: { id: user.id } };
     jwt.sign(payload, process.env.JWT_SECRET || 'your_jwt_secret_key_here', { expiresIn: '7d' }, (err, token) => {
       if (err) throw err;
@@ -40,26 +49,43 @@ await user.save();
 exports.login = async (req, res) => {
   const { email, password } = req.body;
 
-  try {
-    let user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ message: 'Invalid Credentials' });
+  // Demo login (No MongoDB required)
+  if (
+    email === "admin@swms.com" &&
+    password === "Admin@123"
+  ) {
+    const demoUser = {
+      _id: "demo-admin",
+      name: "SWMS Administrator",
+      email: "admin@swms.com",
+      role: "admin",
+    };
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ message: 'Invalid Credentials' });
+    const payload = {
+      user: {
+        id: demoUser._id,
+      },
+    };
 
-    const payload = { user: { id: user.id } };
-    jwt.sign(payload, process.env.JWT_SECRET || 'your_jwt_secret_key_here', { expiresIn: '7d' }, (err, token) => {
-      if (err) throw err;
-      res.json({ token, user: { _id: user.id, name: user.name, email: user.email, role: user.role } });
+    const token = jwt.sign(
+      payload,
+      process.env.JWT_SECRET || "your_jwt_secret_key_here",
+      {
+        expiresIn: "7d",
+      }
+    );
+
+    return res.json({
+      success: true,
+      token,
+      user: demoUser,
     });
-  } catch (err) {
-  console.error("REGISTER ERROR:", err);
-  res.status(500).json({
+  }
+
+  return res.status(401).json({
     success: false,
-    message: err.message,
-    error: err,
+    message: "Invalid Email or Password",
   });
-}
 };
 
 exports.getMe = async (req, res) => {

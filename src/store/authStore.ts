@@ -12,7 +12,7 @@ export const useAuthStore = create<AuthState>((set) => ({
 isAuthenticated: !!localStorage.getItem("token"),
   login: async (email: string, password: string) => {
   try {
-    const response = await fetch("http://localhost:5000/api/auth/login", {
+    const response = await fetch("https://swms-project.onrender.com/api/auth/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
