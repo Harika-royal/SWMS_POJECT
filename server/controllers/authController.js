@@ -49,43 +49,26 @@ try {
 exports.login = async (req, res) => {
   const { email, password } = req.body;
 
-  // Demo login (No MongoDB required)
-  if (
-    email === "admin@swms.com" &&
-    password === "Admin@123"
-  ) {
-    const demoUser = {
-      _id: "demo-admin",
-      name: "SWMS Administrator",
-      email: "admin@swms.com",
-      role: "admin",
-    };
+  try {
+    let user = await User.findOne({ email });
+    if (!user) return res.status(400).json({ message: 'Invalid Credentials' });
 
-    const payload = {
-      user: {
-        id: demoUser._id,
-      },
-    };
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(400).json({ message: 'Invalid Credentials' });
 
-    const token = jwt.sign(
-      payload,
-      process.env.JWT_SECRET || "your_jwt_secret_key_here",
-      {
-        expiresIn: "7d",
-      }
-    );
-
-    return res.json({
-      success: true,
-      token,
-      user: demoUser,
-    });
-  }
-
-  return res.status(401).json({
+    return res.status(201).json({
+  success: true,
+  message: "User created successfully",
+  user,
+});
+  } catch (err) {
+  console.error("REGISTER ERROR:", err);
+  res.status(500).json({
     success: false,
-    message: "Invalid Email or Password",
+    message: err.message,
+    error: err,
   });
+}
 };
 
 exports.getMe = async (req, res) => {
